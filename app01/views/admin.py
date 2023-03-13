@@ -1,10 +1,10 @@
 from django.shortcuts import render,redirect
 from app01 import models
-from app01.utils.form import AdminModelForm
+from app01.utils.form import AdminModelForm,AdminEditModelForm,AdminResetModelForm
 
 def admin(request):
     if request.method == "GET":
-        data = {}
+        data = {}  # models.Admin.objects.filter的参数可以是字典
         value = request.GET.get('q', '')
         if value:
             data['username__contains'] = value
@@ -34,18 +34,21 @@ def admin_add(request):
     return render(request,'change.html',context)
 
 def admin_edit(request,nid):
+    """编辑管理员"""
     context = {
         'title': '编辑管理员',
         'back_url': '/admin/',
     }
     row_data = models.Admin.objects.filter(id=nid).first()
+    if row_data is None:
+        return render(request,'error.html',{'errmsg':'数据错误'})
 
     if request.method == 'GET':
-        adminform = AdminModelForm(instance=row_data)
+        adminform = AdminEditModelForm(instance=row_data)
         context['form'] = adminform
         return render(request,'change.html',context)
 
-    adminform = AdminModelForm(request.POST,instance=row_data)
+    adminform = AdminEditModelForm(request.POST,instance=row_data)
     if adminform.is_valid():
         adminform.save()
         context['flag'] = True
@@ -56,5 +59,36 @@ def admin_edit(request,nid):
     return render(request,'change.html',context)
 
 def admin_delete(request,nid):
-    models.Admin.objects.filter(id=nid).delete()
-    return redirect('/admin/')
+    '''删除管理员'''
+    if models.Admin.objects.filter(id=nid):
+        models.Admin.objects.filter(id=nid).delete()
+        return redirect('/admin/')
+    else:
+        return render(request,'error.html',{'errmsg':'数据错误'})
+
+def admin_reset(request,nid):
+    '''重置管理员密码'''
+    context = {
+        'title': '重置密码',
+        'back_url': '/admin/',
+    }
+    row_data = models.Admin.objects.filter(id=nid).first()
+    if row_data is None:
+        return render(request, 'error.html', {'errmsg': '数据错误'})
+
+    if request.method == 'GET':
+        adminform = AdminResetModelForm(instance=row_data)
+        context['form'] = adminform
+        return render(request,'change.html',context)
+
+    adminform = AdminResetModelForm(request.POST,instance=row_data)
+    if adminform.is_valid():
+        adminform.save()
+        context['flag'] = True
+        context['form'] = adminform
+        return render(request,'change.html',context)
+
+    context['form'] = adminform
+    return render(request,'change.html',context)
+
+

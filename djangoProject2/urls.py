@@ -16,12 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app01.views import department,index,mobile,user
+from app01.views import department,index,mobile,user,account
 from app01.views import admin as adm
 
 urlpatterns = [
     # path("admin/", admin.site.urls),
-    path("",index.index),
+    path("index/",index.index),
 
     # 部门管理
     path("department/",department.department),
@@ -45,6 +45,12 @@ urlpatterns = [
     # 管理员管理
     path("admin/",adm.admin),
     path("admin/add/",adm.admin_add),
-    path("admin/<int:nid>/edit",adm.admin_edit),
-    path("admin/<int:nid>/delete",adm.admin_delete)
+    path("admin/<int:nid>/edit/",adm.admin_edit),
+    path("admin/<int:nid>/delete/",adm.admin_delete),
+    path("admin/<int:nid>/reset/",adm.admin_reset),
+
+    # 用户登录
+    path("login/",account.login),
+    path("",account.login),
+    path("logout/",account.logout)
 ]

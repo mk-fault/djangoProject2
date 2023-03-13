@@ -11,9 +11,9 @@ from app01.utils.encrypt import MD5
 
 
 # 写一个Bootsrap的类，改写其init方法，让后面的ModelForm都继承他，就可以为Django自动生成的HTML加上CSS样式
-class BootstrapModelForm(forms.ModelForm):
+class Bootstrap:
     def __init__(self,*args,**kwargs):
-        super(BootstrapModelForm, self).__init__( *args,**kwargs) # 我敲，必须吧*args和 **kwargs加上，不然POST传回时没有值
+        super().__init__( *args,**kwargs) # 我敲，必须吧*args和 **kwargs加上，不然POST传回时没有值
         for name,field in self.fields.items():
             if field.widget.attrs:
                 field.widget.attrs['class'] = "form-control"
@@ -21,6 +21,21 @@ class BootstrapModelForm(forms.ModelForm):
             else:
                 field.widget.attrs = {"class":"form-control",
                                       "placeholder":field.label}
+
+class BootstrapModelForm(Bootstrap,forms.ModelForm):
+    # def __init__(self,*args,**kwargs):
+    #     super(BootstrapModelForm, self).__init__( *args,**kwargs) # 我敲，必须吧*args和 **kwargs加上，不然POST传回时没有值
+    #     for name,field in self.fields.items():
+    #         if field.widget.attrs:
+    #             field.widget.attrs['class'] = "form-control"
+    #             field.widget.attrs['placeholder'] = field.label
+    #         else:
+    #             field.widget.attrs = {"class":"form-control",
+    #                                   "placeholder":field.label}
+    pass
+
+class BootstrapForm(Bootstrap,forms.Form):
+    pass
 
 # 用户管理ModelForm
 class UserModelForm(BootstrapModelForm):
@@ -46,6 +61,7 @@ class MobileModelForm(BootstrapModelForm):
 
 
     # 方法二：钩子方法验证，要求字段已在Meta中添加
+    # 在钩子方法中可以通过self.instance.pk获取当前数据的primary key值(id)
     def clean_mobile(self):
         _mobile = self.cleaned_data['mobile']
 
@@ -92,3 +108,26 @@ class AdminModelForm(BootstrapModelForm):
         if md5_confirm != md5_password:
             raise ValidationError("密码不一致")
         return md5_confirm
+
+class AdminEditModelForm(AdminModelForm):
+    class Meta:
+        model = models.Admin
+        fields = ['username']
+
+class AdminResetModelForm(AdminModelForm):
+    username = forms.CharField(label='用户名',disabled=True,max_length=32)
+
+    # class Meta:
+    #     model = models.Admin
+    #     fields = ['username','password','confirm']   # 新增字段也要在field中添加上
+    #     widgets = {
+    #         'password':forms.PasswordInput
+    #     }
+
+class LoginForm(BootstrapForm):
+    username = forms.CharField(label='用户名',required=True)
+    password = forms.CharField(label='密码',widget=forms.PasswordInput(render_value=True),required=True)
+
+    def clean_password(self):
+        md5_pwd = MD5(self.cleaned_data['password'])
+        return md5_pwd

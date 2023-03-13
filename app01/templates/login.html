@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}">
+    <style>
+        .mycont {
+            height: 400px;
+            width: 400px;
+            margin: 60px auto;
+            border: 1px solid #dddddd;
+            padding: 40px;
+            box-shadow: 5px 5px 20px;
+        }
+
+        .text1 {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container-fluid clearfix mycont">
+    <h1 class="text1">用户登录</h1>
+    <form class="form-horizontal" method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+            <label style="margin-top: 10px">{{ field.label }}</label>
+            {{ field }}
+            <div style="color: red;">{{ field.errors.0 }}</div>
+        {% endfor %}
+        <div class="form-group">
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-info" style="margin-top: 20px">登录</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

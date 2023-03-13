@@ -1,0 +1,40 @@
+{% extends 'nav_temp.html' %}
+
+{% block content %}
+    <div class="container">
+        <div style="margin-bottom: 20px;margin-top: 20px">
+            <a href="/department/add/" class="btn btn-success">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> 新建部门</a>
+        </div>
+
+        <div>
+            <div class="panel panel-default panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">部门列表</h3>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in depart_list %}
+                        <tr>
+                            <td>{{ obj.id }}</td>
+                            <td>{{ obj.title }}</td>
+                            <td>
+                                <a href="/department/{{ obj.id }}/edit" class="btn btn-info btn-sm">编辑</a>
+                                <a href="/department/delete/?nid={{ obj.id }}" class="btn btn-danger btn-sm">删除</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

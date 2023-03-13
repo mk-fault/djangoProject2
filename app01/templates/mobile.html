@@ -1,0 +1,57 @@
+{% extends 'nav_temp.html' %}
+
+{% block content %}
+    <div class="container">
+        <div style="margin-bottom: 20px;margin-top: 20px" class="row">
+            <div class="col-md-2">
+                <a href="/mobile/add/" class="btn btn-success">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> 新增靓号</a>
+            </div>
+            <div class="col-md-offset-8">
+                <form method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="输入号码" name="num" value="{{ value }}">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">搜 索</button></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <div class="panel panel-default panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">靓号列表</h3>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>手机号</th>
+                        <th>价格</th>
+                        <th>级别</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in mobile_list %}
+                        <tr>
+                            <td>{{ obj.id }}</td>
+                            <td>{{ obj.mobile }}</td>
+                            <td>{{ obj.price }}</td>
+                            <td>{{ obj.get_level_display }}</td>
+                            <td>{{ obj.get_status_display }}</td>
+                            <td>
+                                <a href="/mobile/{{ obj.id }}/edit" class="btn btn-info btn-sm">编辑</a>
+                                <a href="/mobile/{{ obj.id }}/delete" class="btn btn-danger btn-sm">删除</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

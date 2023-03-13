@@ -1,0 +1,30 @@
+{% extends 'nav_temp.html' %}
+{% block content %}
+    <div class="container">
+        <div style="margin-top: 50px">
+            <div style="margin-bottom: 20px">
+                <a href="/user/" class="btn btn-success"><span class="glyphicon glyphicon-share-alt"
+                                                               aria-hidden="true"></span> 返 回</a>
+            </div>
+            <div class="panel panel-default panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">编辑人员</h3>
+                </div>
+                <div class="panel-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <label style="margin-top: 10px">{{ field.label }}</label>
+                            {{ field }}
+                            <div style="color: red;">{{ field.errors.0 }}</div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-info" style="margin-top: 20px">保 存</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% if flag == True %}
+            <div class="alert alert-success" role="alert">修改成功</div>
+        {% endif %}
+    </div>
+{% endblock %}

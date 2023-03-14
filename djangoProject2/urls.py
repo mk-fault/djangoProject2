@@ -52,5 +52,6 @@ urlpatterns = [
     # 用户登录
     path("login/",account.login),
     path("",account.login),
-    path("logout/",account.logout)
+    path("logout/",account.logout),
+    path("login/code/",account.get_code)
 ]

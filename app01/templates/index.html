@@ -1,0 +1,20 @@
+{% extends 'nav_temp.html' %}
+{% load static %}
+{% block css %}
+    <style>
+        #indexdiv{
+            width: 1600px;
+            height: 800px;
+            margin: 0 auto;
+        }
+        #indexdiv #indeximg{
+            width: 1600px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div id="indexdiv">
+        <img src="{% static 'imgs/img1.jpg'%}" id="indeximg">
+    </div>
+
+{% endblock %}

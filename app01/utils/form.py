@@ -125,8 +125,9 @@ class AdminResetModelForm(AdminModelForm):
     #     }
 
 class LoginForm(BootstrapForm):
-    username = forms.CharField(label='用户名',required=True)
+    username = forms.CharField(label='用户名',widget=forms.TextInput,required=True)
     password = forms.CharField(label='密码',widget=forms.PasswordInput(render_value=True),required=True)
+    verify = forms.CharField(label='验证码',widget=forms.TextInput,required=True)
 
     def clean_password(self):
         md5_pwd = MD5(self.cleaned_data['password'])

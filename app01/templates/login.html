@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.min.css' %}">
     <style>
         .mycont {
-            {#height: 500px;#}
-            width: 500px;
+        {#height: 500px;#} width: 500px;
             margin: 60px auto;
             border: 1px solid #dddddd;
             padding: 40px;
@@ -45,10 +44,10 @@
             <div class="row">
                 <div class="col-md-7">
                     {{ form.verify }}
-                <span style="color: red">{{ form.verify.errors.0 }}</span>
+                    <span style="color: red">{{ form.verify.errors.0 }}</span>
                 </div>
                 <div class="col-md-5">
-                    <img src="/login/code/" style="width: 120px">
+                    <img src="/login/code/" id="codepic" style="border:1px solid darkcyan;">
                 </div>
             </div>
         </div>
@@ -57,6 +56,10 @@
         </div>
     </form>
 </div>
+
+<script src="{% static 'js/jquery-3.6.3.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
+
 
 </body>
 </html>

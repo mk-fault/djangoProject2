@@ -132,3 +132,12 @@ class LoginForm(BootstrapForm):
     def clean_password(self):
         md5_pwd = MD5(self.cleaned_data['password'])
         return md5_pwd
+
+class TaskModelForm(BootstrapModelForm):
+    class Meta:
+        model = models.Task
+        fields = '__all__'
+        widgets = {
+            'detail':forms.TextInput
+        }
+

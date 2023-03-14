@@ -10,8 +10,8 @@ _numbers = ''.join(map(str, range(3, 10)))
 init_chars = ''.join((_letter_cases, _upper_cases, _numbers))
 
 
-def check_code(width=120,
-               height=30,
+def check_code(width=160,
+               height=40,
                char_length=4,
                font_file=r'app01\static\other\monaco.ttf',
                font_size=25,
@@ -43,8 +43,8 @@ def check_code(width=120,
     for i in range(char_length):
         char = rndChar()
         code.append(char)
-        h = random.randint(0, 5)
-        draw.text([i * width / (char_length + 1), 0], char, font=font, fill=rndColor())
+        h = random.randint(0, 2)
+        draw.text([i * width / (char_length + 1), h], char, font=font, fill=rndColor())
 
     # 写干扰点
     for i in range(40):

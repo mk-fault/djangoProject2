@@ -14,22 +14,22 @@ def login(request):
 
     form = LoginForm(request.POST)
     if form.is_valid():
-        ori_code = request.session.get('verify')
+        # 验证码校验
+        ori_code = request.session.get('verify','')
         user_code = form.cleaned_data.pop('verify')  # 后续验证中form应该把verify字段去掉
-        print(ori_code)
-        print(user_code)
         if ori_code.upper() != user_code.upper():
             form.add_error('verify','验证码输入错误')
             return render(request,'login.html',{'form':form})
 
+        # 验证用户名密码
         obj = models.Admin.objects.filter(**form.cleaned_data).first()
-
         # 数据库中不存在则返回登录界面并报错
         if obj is None:
             form.add_error('password',"用户名或密码错误")
             return render(request,'login.html',{'form':form})
 
         request.session['info'] = {'id':obj.id,'username':obj.username}
+        request.session.set_expiry(60*60*24*7)
         return redirect('/index/')
 
     return render(request,'login.html',{'form':form})

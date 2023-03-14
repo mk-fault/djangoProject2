@@ -1,0 +1,59 @@
+{% extends 'nav_temp.html' %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">任务添加</h3>
+            </div>
+            <div class="panel-body">
+                <div class="clearfix">
+                    <form id="formAdd">
+                        {% for field in form %}
+                            <div class="col-sm-6" style="margin-bottom: 10px">
+                                <label>{{ field.label }}</label> <span style="color: red" class="myerror"></span>
+                                {{ field }}
+
+                            </div>
+                        {% endfor %}
+                    </form>
+                    <div class="col-sm-12">
+                        <button id="btnAdd" class="btn btn-success">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block js %}
+    <script>
+        $(function () {
+            AddTask();
+        })
+
+        function AddTask() {
+            $('#btnAdd').click(function () {
+                $('.myerror').empty()
+                $.ajax({
+                    url: '/task/',
+                    type: 'post',
+                    data: $('#formAdd').serialize(),
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            alert('添加成功')
+                        } else {
+                            $.each(res.error, function (name, data) {
+                                console.log(name,data);
+                                $('#id_'+name).prev().text(data)
+                            })
+                        }
+                    }
+                })
+            })
+        }
+    </script>
+{% endblock %}

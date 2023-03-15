@@ -6,13 +6,19 @@ from app01 import models
 from app01.utils.form import TaskModelForm
 
 
-@csrf_exempt
-def task(request):
-    if request.method == 'GET':
-        form = TaskModelForm()
-        return render(request,'task.html',{'form':form})
 
-    print(request.POST)
+def task(request):
+    form = TaskModelForm()
+    task_list = models.Task.objects.all()
+    context = {
+        'form': form,
+        'task_list':task_list
+    }
+    return render(request, 'task.html', context)
+
+
+@csrf_exempt
+def task_ajax(request):
     form = TaskModelForm(request.POST)
     if form.is_valid():
         form.save()

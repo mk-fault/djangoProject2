@@ -141,3 +141,7 @@ class TaskModelForm(BootstrapModelForm):
             'detail':forms.TextInput
         }
 
+class OrderModelForm(BootstrapModelForm):
+    class Meta:
+        model = models.Order
+        exclude = ['oid','admin']

@@ -24,6 +24,41 @@
                 </div>
             </div>
         </div>
+
+        <div>
+            <div class="panel panel-default panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">任务列表</h3>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>项目名</th>
+                        <th>级别</th>
+                        <th>详细描述</th>
+                        <th>负责人</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in task_list %}
+                        <tr>
+                            <td>{{ obj.id }}</td>
+                            <td>{{ obj.title }}</td>
+                            <td>{{ obj.get_level_display }}</td>
+                            <td>{{ obj.detail }}</td>
+                            <td>{{ obj.manager }}</td>
+                            <td>
+                                <a href="#" class="btn btn-info btn-sm">编辑</a>
+                                <a href="#" class="btn btn-danger btn-sm">删除</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
@@ -38,17 +73,18 @@
             $('#btnAdd').click(function () {
                 $('.myerror').empty()
                 $.ajax({
-                    url: '/task/',
+                    url: '/task/ajax/',
                     type: 'post',
                     data: $('#formAdd').serialize(),
                     dataType: "JSON",
                     success: function (res) {
                         if (res.status) {
-                            alert('添加成功')
+                            alert('添加成功');
+                            location.reload()
                         } else {
                             $.each(res.error, function (name, data) {
-                                console.log(name,data);
-                                $('#id_'+name).prev().text(data)
+                                console.log(name, data);
+                                $('#id_' + name).prev().text(data)
                             })
                         }
                     }

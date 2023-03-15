@@ -1,0 +1,242 @@
+{% extends 'nav_temp.html' %}
+
+{% block content %}
+    <div class="container">
+        <div>
+            <button class="btn btn-success" id="btnAddShow">新建订单</button>
+        </div>
+
+        <div style="margin-top: 20px">
+            <div class="panel panel-default panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">订单列表</h3>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>订单号</th>
+                        <th>商品名</th>
+                        <th>价格</th>
+                        <th>状态</th>
+                        <th>管理员</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in order_list %}
+                        <tr>
+                            <td>{{ obj.id }}</td>
+                            <td>{{ obj.oid }}</td>
+                            <td>{{ obj.title }}</td>
+                            <td>{{ obj.price }}</td>
+                            <td>{{ obj.get_status_display }}</td>
+                            <td>{{ obj.admin }}</td>
+                            <td>
+                                <button uid="{{ obj.id }}" class="btn btn-info btn-sm btnEditShow">编辑</button>
+                                <button uid="{{ obj.id }}" class="btn btn-danger btn-sm btnDeleteShow">删除</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {#    新增模态框#}
+    <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">新建订单</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="clearfix">
+                        <form id="formAdd">
+                            {% for field in form %}
+                                <div class="col-sm-6" style="margin-bottom: 10px">
+                                    <label>{{ field.label }}</label> <span style="color: red" class="myerror"></span>
+                                    {{ field }}
+                                </div>
+                            {% endfor %}
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer" id="btndiv">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="save">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#删除模态框#}
+    <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                <h2 style="margin: 50px auto;text-align: center">是否确定删除</h2>
+                <p></p>
+                <p style="text-align: right">
+                    <button type="button" class="btn btn-danger" id="btnDelete">确定删除</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        var Delete_id;
+        var Edit_id;
+
+        $(function () {
+            ShowAddModal();
+            ChangeOrder();
+            ShowDeleteModal();
+            DeleteOrder();
+            ShowEditModal();
+        })
+
+        //点击新增按钮显示新增模态框
+        function ShowAddModal() {
+            $('#btnAddShow').click(function () {
+                Edit_id = undefined;
+                $('#formAdd')[0].reset();
+                $('#myModalLabel').text('新建');
+                $('#AddModal').modal('show');
+            })
+        }
+
+        //点击编辑按钮显示编辑模态框（与新增公用一个）
+        function ShowEditModal() {
+            $('.btnEditShow').click(function () {
+                $('#myModalLabel').text('编辑')
+                $('#AddModal').modal('show')
+                $('#formAdd')[0].reset();
+                Edit_id = $(this).attr('uid')
+                $.ajax({
+                    url: '/order/edit/show/',
+                    type: 'get',
+                    data: {
+                        edit_id: Edit_id,
+                    },
+                    dataType: 'JSON',
+                    success: function (res) {
+                        if (res.status) {
+                            $.each(res.dic, function (name, data) {
+                                $('#id_' + name).val(data)
+                            })
+                        } else {
+                            alert('数据库中不存在此信息')
+                        }
+                    }
+                })
+            })
+        }
+
+        //点击删除显示删除模态框
+        function ShowDeleteModal() {
+            $('.btnDeleteShow').click(function () {
+                $('#DeleteModal').modal('show')
+                Delete_id = $(this).attr('uid')
+            })
+        }
+
+        // 添加或编辑数据
+        function ChangeOrder() {
+            $('#save').click(function () {
+                $('.myerror').empty()
+                if (Edit_id) {
+                    doEdit()
+                } else {
+                    doAdd()
+                }
+            })
+        }
+
+        // 添加数据
+        function doAdd() {
+            $.ajax({
+                url: '/order/add/',
+                type: 'post',
+                data: $('#formAdd').serialize(),
+                dataType: 'JSON',
+                success: function (res) {
+                    if (res.status) {
+                        alert('添加成功');
+
+                        //清空表单
+                        $('#formAdd')[0].reset();
+
+                        //刷新页面
+                        location.reload()
+                    } else {
+                        $.each(res.errors, function (name, error) {
+                            $('#id_' + name).prev().text(error)
+                        })
+                    }
+                }
+            })
+        }
+
+        // 编辑数据
+        function doEdit() {
+            $.ajax({
+                url: '/order/edit/' + '?edit_id=' + Edit_id,
+                type: 'post',
+                data: $('#formAdd').serialize(),
+                dataType: 'JSON',
+                success: function (res) {
+                    if (res.exist) {
+                        if (res.status) {
+                            alert('更新成功');
+                            location.reload()
+                            $('#formAdd')[0].reset();
+                            $('#AddModal').modal('hide');
+                        } else {
+                            $.each(res.errors, function (name, data) {
+                                $('#id_' + name).prev().text(data);
+                            })
+                        }
+                    } else {
+                        alert('数据库中不存在此信息')
+                    }
+
+                }
+            })
+        }
+
+        // 删除数据
+        function DeleteOrder() {
+            $('#btnDelete').click(function () {
+                $.ajax({
+                    url: '/order/delete/',
+                    type: 'post',
+                    data: {
+                        delete_id: Delete_id
+                    },
+                    dataType: 'JSON',
+                    success: function (res) {
+                        if (res.status) {
+                            $('#DeleteModal').modal('hide')
+                            //刷新页面
+                            location.reload()
+                        } else {
+                            alert('数据库中不存在此信息')
+                            $('#DeleteModal').modal('hide')
+                            //刷新页面
+                            location.reload()
+                        }
+                        Delete_id = undefined
+                    }
+                })
+            })
+        }
+
+    </script>
+{% endblock %}

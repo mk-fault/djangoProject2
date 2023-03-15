@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app01.views import department,index,mobile,user,account,task
+from app01.views import department,index,mobile,user,account,task,order,graph
 from app01.views import admin as adm
 
 urlpatterns = [
@@ -56,5 +56,17 @@ urlpatterns = [
     path("login/code/",account.get_code),
 
     # 任务管理
-    path("task/",task.task)
+    path("task/ajax/",task.task_ajax),
+    path("task/",task.task),
+
+    # 订单管理
+    path("order/",order.order),
+    path("order/add/",order.order_add),
+    path("order/delete/",order.order_delete),
+    path("order/edit/show/",order.order_edit_show),
+    path("order/edit/",order.order_edit),
+
+    # 数据分析
+    path("graph/",graph.graph),
+    path("graph/data/",graph.graph_data)
 ]

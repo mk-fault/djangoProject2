@@ -1,0 +1,62 @@
+{% extends 'nav_temp.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Panel title</h3>
+            </div>
+            <div class="panel-body">
+                <div id="m1" style="width: 600px;height: 400px"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/echarts.min.js' %}"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            initbar();
+        })
+
+        function initbar() {
+            var myChart = echarts.init(document.getElementById('m1'));
+
+            var option = {
+                title: {
+                    text: '业绩'
+                },
+                tooltip: {},
+                legend: {
+                    data: []
+                },
+                xAxis: {
+                    data: []
+                },
+                yAxis: {},
+                series: []
+            };
+            $.ajax({
+                url:'/graph/data/',
+                type:'get',
+                dataType:'JSON',
+                success:function (res) {
+                    if (res.status) {
+                        option.legend.data = res.data.legend_list;
+                        option.xAxis.data = res.data.x_axis;
+                        option.series = res.data.series_list;
+
+                        myChart.setOption(option);
+                    }
+                }
+            })
+
+
+
+
+        }
+    </script>
+{% endblock %}

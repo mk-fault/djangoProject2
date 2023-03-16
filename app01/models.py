@@ -17,7 +17,7 @@ class UserInfo(models.Model):
     age = models.IntegerField(verbose_name='年龄')
     account = models.DecimalField(verbose_name='账户余额',max_digits=10,decimal_places=2,default=0)
     create_time = models.DateField(verbose_name='入职时间')
-    depart = models.ForeignKey(verbose_name='所属部门',to='Department',to_field='id',on_delete=models.CASCADE)
+    depart = models.ForeignKey(verbose_name='所属部门',to='Department',to_field='id',on_delete=models.CASCADE,related_name='users')
 
     gender_choices = ((1,'男'),(2,'女'))
 

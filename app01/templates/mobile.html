@@ -52,6 +52,22 @@
                 </table>
             </div>
         </div>
+
+        <div class="panel panel-default panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">批量上传</h3>
+            </div>
+            <div class="panel-body">
+                <form action="/mobile/multiadd/" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="file" name="excel">
+                    </div>
+                    <button type="submit" class="btn btn-success">上传</button>
+                </form>
+            </div>
+        </div>
+
     </div>
 
 {% endblock %}

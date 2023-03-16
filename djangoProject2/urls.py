@@ -14,12 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
 
+# 想要使用Media目录需配置re_path,settings,serve
+from django.urls import path,re_path,include
+from django.conf import settings
+from django.views.static import serve
+
+import app01
 from app01.views import department,index,mobile,user,account,task,order,graph
 from app01.views import admin as adm
 
 urlpatterns = [
+
+    re_path(r'^media/(?P<path>.*)$',serve,{'document_root':settings.MEDIA_ROOT},name='media'),
     # path("admin/", admin.site.urls),
     path("index/",index.index),
 
@@ -28,6 +35,8 @@ urlpatterns = [
     path("department/add/",department.depart_add),
     path("department/delete/",department.depart_delete),
     path("department/<int:nid>/edit",department.depart_edit),
+    path("department/class/",department.depart_class.as_view()),
+    path("app01/",include('app01.urls')),   # 分体路由，将后续URL交于app01下的urls.py绑定
 
     # 用户管理
     path("user/",user.user),
@@ -41,6 +50,7 @@ urlpatterns = [
     path("mobile/add/",mobile.mobile_add),
     path("mobile/<int:nid>/edit/",mobile.mobile_edit),
     path("mobile/<int:nid>/delete/",mobile.mobile_delete),
+    path("mobile/multiadd/",mobile.mobile_multiadd),
 
     # 管理员管理
     path("admin/",adm.admin),

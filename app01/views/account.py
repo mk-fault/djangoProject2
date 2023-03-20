@@ -1,6 +1,6 @@
 from io import BytesIO
 
-from django.shortcuts import render,redirect,HttpResponse
+from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect
 
 from app01.models import Admin
 from app01.utils.form import LoginForm
@@ -9,6 +9,8 @@ from app01.utils.gen_code import check_code
 
 def login(request):
     if request.method == 'GET':
+        if request.session.get('info'):
+            return render(request,'index.html')
         form = LoginForm()
         return render(request,'login.html',{'form':form})
 
@@ -30,7 +32,9 @@ def login(request):
 
         request.session['info'] = {'id':obj.id,'username':obj.username}
         request.session.set_expiry(60*60*24*7)
-        return redirect('/index/')
+        resp = HttpResponseRedirect('/index/')
+        resp.set_cookie('mycook','314')
+        return resp
 
     return render(request,'login.html',{'form':form})
 

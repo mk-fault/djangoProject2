@@ -41,4 +41,4 @@ models.UserInfo.objects.filter(id__lte=4).update(age=F('age') * 2)
 # & 与
 # ~ 非
 res = models.UserInfo.objects.filter(Q(id__lte=4)|Q(id__gte=6))
-print(res)
+# print(res)

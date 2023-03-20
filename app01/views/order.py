@@ -1,5 +1,7 @@
+import codecs
 import random
 import datetime
+import csv
 
 from django.shortcuts import render,HttpResponse,redirect
 from django.http import JsonResponse
@@ -111,5 +113,18 @@ def order_edit(request):
     }
     return JsonResponse(data)
 
+#  订单下载
+def order_download(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment;filename="order.csv'
+    order_list = models.Order.objects.all()
+    response.write(codecs.BOM_UTF8)  # 解决中文乱码问题！！！！！
+    writer = csv.writer(response)
+    title_list = ['ID','订单号','商品名','价格','状态','管理员']
+    writer.writerow(title_list)
+    for ord in order_list:
+        writer.writerow([ord.id,ord.oid,ord.title,ord.price,ord.status,ord.admin])
+
+    return response
 
 

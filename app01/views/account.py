@@ -32,7 +32,7 @@ def login(request):
 
         request.session['info'] = {'id':obj.id,'username':obj.username}
         request.session.set_expiry(60*60*24*7)
-        resp = HttpResponseRedirect('/index/')
+        resp = redirect('/index/')
         resp.set_cookie('mycook','314')
         return resp
 

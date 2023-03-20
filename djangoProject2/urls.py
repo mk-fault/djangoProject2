@@ -75,6 +75,7 @@ urlpatterns = [
     path("order/delete/",order.order_delete),
     path("order/edit/show/",order.order_edit_show),
     path("order/edit/",order.order_edit),
+    path("order/download/",order.order_download),
 
     # 数据分析
     path("graph/",graph.graph),

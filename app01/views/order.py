@@ -7,7 +7,6 @@ from django.shortcuts import render,HttpResponse,redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from app01.models import Order
 from app01.utils.form import OrderModelForm
 from app01 import models
 

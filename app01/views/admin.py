@@ -1,4 +1,6 @@
 from django.shortcuts import render,redirect
+from django.core import mail
+
 from app01 import models
 from app01.utils.form import AdminModelForm,AdminEditModelForm,AdminResetModelForm
 
@@ -25,6 +27,12 @@ def admin_add(request):
     adminform = AdminModelForm(request.POST)
     if adminform.is_valid():
         adminform.save()
+        # 管理员添加成功发送邮件
+        mail.send_mail(subject='管理员添加',
+                       message=f'管理员-{adminform.cleaned_data["username"]}成功添加',
+                       from_email='945495541@qq.com',
+                       recipient_list=['945495541@qq.com'])
+
         adminform = AdminModelForm()
         context['form'] = adminform
         context['flag'] = True

@@ -49,7 +49,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "app01.middleware.auth.AuthMiddleWare"
+    "app01.middleware.mymiddleware.AuthMiddleWare",
+    "app01.middleware.mymiddleware.ExceptionMailMiddleWare",
 ]
 
 ROOT_URLCONF = "djangoProject2.urls"
@@ -118,6 +119,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
+# 静态文件配置
 STATIC_URL = "static/"
 
 # Default primary key field type
@@ -125,5 +127,15 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# 文件存储配置
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = "media/"
+
+# 邮箱配置
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = '945495541@qq.com'
+EMAIL_HOST_PASSWORD = 'ruibahhdhfambdjg'
+
+EX_EMAIL_RECIPIENT = ['945495541@qq.com'] # 邮箱收件人配置（自定义的）
